@@ -5,7 +5,7 @@ const router = express.Router()
 const initAPIRoute = (app) => {
     router.get('/',  APIController.getAllUsers)
 
-    return app.use(router)
+    return app.use('/api/v1/', router)
 }
 
 export default initAPIRoute
