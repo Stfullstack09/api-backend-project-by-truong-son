@@ -1,5 +1,5 @@
 import db from "../models"
-
+import CRUDService from "../services/CRUDService";
 class SiteController {
     async getHomePage(req, res, next) {
 
@@ -14,6 +14,20 @@ class SiteController {
             console.log(error);
         }
     }
+
+    async getCRUD(req, res, next) {
+        res.render('layout/crud.ejs')
+    }
+
+    async createUserPOSTCRUD(req , res, next) {
+       try {
+           const Message = await CRUDService.createNewUser(req.body)
+            res.send(Message)
+       } catch (error) {
+            next
+       }
+    }
+    
 }
 
 export default new SiteController

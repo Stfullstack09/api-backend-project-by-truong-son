@@ -11,8 +11,10 @@ module.exports = {
       lastName: 'Sơn',
       address: 'Hương Lung Cẩm Khê Phú Thọ',
       gender: 1,
-      typeRole: 'ROLE',
-      keyRole: 'R1',
+      roleId: '1',
+      phonenumber: '0869224813',
+      positionId: 'P5',
+      image: 'sd',
       createdAt: new Date(),
       updatedAt: new Date()
     }]);

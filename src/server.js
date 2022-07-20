@@ -8,6 +8,9 @@ require('dotenv').config()
 const port = Number(process.env.PORT) || 8080
 const app = express()
 
+//save body form data
+app.use(express.urlencoded({ extended: true }))
+
 // config viewEngine
 configViewEngine(app)
 // init API router and web Route
