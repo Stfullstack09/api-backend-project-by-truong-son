@@ -6,6 +6,7 @@ const initWebRoute = (app) => {
     router.post('/post-crud',  SiteController.createUserPOSTCRUD)
     router.get('/',  SiteController.getHomePage)
     router.get('/crud',  SiteController.getCRUD)
+    router.get('/get-crud', SiteController.displayGetCRUD)
 
     return app.use('/', router)
 }

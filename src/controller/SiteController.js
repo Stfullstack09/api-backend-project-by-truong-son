@@ -27,6 +27,15 @@ class SiteController {
             next
        }
     }
+
+    async displayGetCRUD(req, res, next) {
+        try {
+            let data = await CRUDService.getAllUsers()
+           res.render('displatGetCRUD.ejs', { data })
+        } catch (error) {
+            
+        }
+    }
     
 }
 

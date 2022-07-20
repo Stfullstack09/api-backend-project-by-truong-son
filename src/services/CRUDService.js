@@ -38,6 +38,17 @@ class CRUDService {
             }
         })
     }
+
+    async getAllUsers() {
+       return new Promise(async(resolve, reject) => {
+            try {
+                const data = await db.User.findAll()
+                resolve(data)
+            } catch (error) {
+                reject(error)
+            }
+       });
+    }
     
 }
 
