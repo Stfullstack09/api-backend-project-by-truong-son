@@ -1,9 +1,9 @@
 import express from 'express';
-import APIController from '../controller/APIController';
+import APIUserController from '../controller/APIUserController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
-    router.get('/', APIController.getAllUsers);
+    router.post('/login', APIUserController.handleLogin);
 
     return app.use('/api/v1/', router);
 };
