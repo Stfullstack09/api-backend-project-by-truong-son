@@ -4,6 +4,7 @@ const router = express.Router();
 
 const initAPIRoute = (app) => {
     router.post('/login', APIUserController.handleLogin);
+    router.get('/get-all-users', APIUserController.handleGetAllUsers);
 
     return app.use('/api/v1/', router);
 };

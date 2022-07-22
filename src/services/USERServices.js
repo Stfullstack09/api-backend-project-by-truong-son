@@ -60,6 +60,33 @@ class USERServices {
             }
         });
     }
+
+    async getAllUser(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = '';
+                if (id) {
+                    if (id === 'All') {
+                        user = await db.User.findAll({
+                            attributes: {
+                                exclude: ['password'], // Không trả password ra
+                            },
+                        });
+                    } else {
+                        user = await db.User.findOne({
+                            where: { id: id },
+                            attributes: {
+                                exclude: ['password'], // Không trả password ra
+                            },
+                        });
+                    }
+                }
+                resolve(user);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
 }
 
 export default new USERServices();
