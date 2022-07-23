@@ -1,5 +1,5 @@
 # api-backend-project-by-truong-son
-API Viết Bởi Node JS
+API Viết Bởi Node JS và sử dụng database PHP MYSQL
 
 # npm init
 cài đặt môi trường và engine 
@@ -8,6 +8,11 @@ cài đặt môi trường và engine
 API là cơ chế cho phép 2 thành phần phần mềm giao tiếp với nhau bằng một tập hợp các định nghĩa và giao thức. Ví dụ: hệ thống phần mềm của cơ quan thời tiết chứa dữ liệu về thời tiết hàng ngày. Ứng dụng thời tiết trên điện thoại của bạn sẽ “trò chuyện” với hệ thống này qua API và hiển thị thông tin cập nhật về thời tiết hàng ngày trên điện thoại của bạn.
  ### API hoạt động như thế nào?
 Kiến trúc API thường được giải thích dưới dạng máy chủ và máy khách. Ứng dụng gửi yêu cầu được gọi là máy khách, còn ứng dụng gửi phản hồi được gọi là máy chủ. Như vậy, trong ví dụ về thời tiết, cơ sở dữ liệu của cơ quan thời tiết là máy chủ còn ứng dụng di động là máy khách. 
+
+### Nó Hoạt Động
+
+![image](https://user-images.githubusercontent.com/97645406/180594503-060bd089-865c-42a6-ad24-ee95dfd5b3c4.png)
+
 
 API hoạt động theo 4 cách khác nhau, tùy vào thời điểm và lý do chúng được tạo ra.
 API SOAP 
