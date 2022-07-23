@@ -2,6 +2,8 @@ import db from '../models';
 import CRUDService from '../services/CRUDService';
 class SiteController {
     async getHomePage(req, res, next) {
+        return res.send('Cảm Ơn Đã Truy Cập Vào Server');
+
         try {
             let data = await CRUDService.getAllUsers();
 
