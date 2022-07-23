@@ -1,5 +1,7 @@
 # api-backend-project-by-truong-son
-API Viết Bởi Node JS và sử dụng database PHP MYSQL
+## API Viết Bởi Node JS và sử dụng database PHP MYSQL 
+ * Áp Dụng mô hình MVC ( model , Controller, View ) Nhưng Server nó chỉ có nhiệm vụ trả ra API ( dữ liệu ) nên app này sẽ không có view
+ * ![image](https://user-images.githubusercontent.com/97645406/180594601-2ecf95f2-a305-45bd-a04a-8291923e49c0.png)
 
 # npm init
 cài đặt môi trường và engine 
