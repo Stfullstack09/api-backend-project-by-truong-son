@@ -24,21 +24,31 @@ class APIUserController {
     async handleGetAllUsers(req, res, next) {
         const id = req.query.id; // All || ID
 
+        console.log(id);
+
         if (!id) {
             return res.status(500).json({
                 errCode: 1,
                 message: 'Missing required parameters',
                 user: [],
             });
+        } else {
+            const user = await USERServices.getAllUser(id);
+
+            if (user) {
+                return res.status(200).json({
+                    errCode: 0,
+                    message: 'successfully',
+                    user: user,
+                });
+            } else {
+                return res.status(200).json({
+                    errCode: 1,
+                    message: `Couldn't find an account to do it`,
+                    user: user,
+                });
+            }
         }
-
-        const user = await USERServices.getAllUser(id);
-
-        return res.status(200).json({
-            errCode: 0,
-            message: 'successfully',
-            user: user,
-        });
     }
 
     async handleCreateNewUser(req, res, next) {
@@ -71,7 +81,7 @@ class APIUserController {
     }
 
     async handleDeleteUser(req, res, next) {
-        const id = req.query.id;
+        const id = req.body.id;
 
         if (id) {
             try {

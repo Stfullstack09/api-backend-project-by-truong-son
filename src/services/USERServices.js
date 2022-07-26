@@ -182,11 +182,13 @@ class USERServices {
     async deleteUser(id) {
         return new Promise(async (resolve, reject) => {
             try {
-                const state = await db.User.destroy({
-                    where: { id },
-                });
+                const User = await db.User.findOne({ where: { id: id } });
 
-                if (state === 1) {
+                if (User) {
+                    await db.User.destroy({
+                        where: { id },
+                    });
+
                     resolve({ errCode: 0, errMessage: `Delete Successfully` });
                 } else {
                     resolve({ errCode: 2, errMessage: `Couldn't find an account to do it` });
