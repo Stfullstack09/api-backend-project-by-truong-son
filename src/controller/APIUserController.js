@@ -49,8 +49,6 @@ class APIUserController {
 
             const Message = await USERServices.createNewUser(req.body);
 
-            console.log(Message);
-
             return res.status(200).json(Message);
         } catch (error) {
             console.log(error);
