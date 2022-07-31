@@ -105,6 +105,12 @@ class CRUDService {
             }
         });
     }
+
+    async testTing() {
+        const data = await db.User.findAll();
+
+        return data;
+    }
 }
 
 export default new CRUDService();

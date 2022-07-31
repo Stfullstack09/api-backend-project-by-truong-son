@@ -133,6 +133,8 @@ class USERServices {
 
     async updateUserData(dataBody) {
         return new Promise(async (resolve, reject) => {
+            console.log(dataBody);
+
             if (
                 dataBody.id &&
                 dataBody.firstName &&
@@ -145,22 +147,47 @@ class USERServices {
                 try {
                     const user = await this.getAllUser(dataBody.id);
 
-                    console.log(user);
-
                     if (user) {
-                        const data = await db.User.update(
-                            {
-                                firstName: dataBody.firstName,
-                                lastName: dataBody.lastName,
-                                address: dataBody.address,
-                            },
-                            { where: { id: dataBody.id } },
-                        );
+                        if (dataBody.password && dataBody.password.length >= 8) {
+                            const hasPassword = await this.hasUserPassword(dataBody.password);
+                            const data = await db.User.update(
+                                {
+                                    firstName: dataBody.firstName,
+                                    lastName: dataBody.lastName,
+                                    address: dataBody.address,
+                                    password: hasPassword,
+                                },
+                                { where: { id: dataBody.id } },
+                            );
 
-                        return resolve({
-                            errCode: 0,
-                            errMessage: 'Update Successfully by account',
-                        });
+                            return resolve({
+                                errCode: 0,
+                                errMessage: 'Update Successfully by account',
+                            });
+                        }
+
+                        if (!dataBody.password) {
+                            const data = await db.User.update(
+                                {
+                                    firstName: dataBody.firstName,
+                                    lastName: dataBody.lastName,
+                                    address: dataBody.address,
+                                },
+                                { where: { id: dataBody.id } },
+                            );
+
+                            return resolve({
+                                errCode: 0,
+                                errMessage: 'Update Successfully by account',
+                            });
+                        }
+
+                        if (dataBody.password && dataBody.password.length < 8) {
+                            return resolve({
+                                errCode: 1,
+                                errMessage: 'password your required 8 key ...',
+                            });
+                        }
                     } else {
                         return resolve({
                             errCode: 1,
@@ -219,6 +246,37 @@ class USERServices {
                     resolve(true);
                 } else {
                     resolve(false);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getAllCodeServices(type) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (type) {
+                    const data = {};
+
+                    let Allcode = await db.Allcode.findAll({
+                        where: {
+                            type, // ES6 syntax
+                        },
+                    });
+
+                    if (Allcode && Allcode.length > 0) {
+                        (data.errCode = 0), (data.data = Allcode), (data.errMessage = 'Successfully');
+                    } else {
+                        (data.errCode = 1), (data.data = {}), (data.errMessage = `Couldn't find an account to do it`);
+                    }
+
+                    return resolve(data);
+                } else {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameters',
+                    });
                 }
             } catch (error) {
                 reject(error);

@@ -79,6 +79,12 @@ class SiteController {
             });
         }
     }
+
+    async testTing(req, res, next) {
+        const data = await CRUDService.testTing();
+
+        res.json(data);
+    }
 }
 
 export default new SiteController();

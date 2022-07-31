@@ -5,7 +5,7 @@
         "database": "database-bookingke",
         "host": "127.0.0.1",
         "dialect": "mysql",
-        "logging": false,
+        "logging": true,
         "timezone": "+07:00",
         "query": {
             "raw": true
