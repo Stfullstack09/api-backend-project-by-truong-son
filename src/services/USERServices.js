@@ -15,7 +15,7 @@ class USERServices {
                 if (isExist) {
                     const user = await db.User.findOne({
                         where: { email: email },
-                        attributes: ['email', 'roleId', 'password'], // lấy ra những column cần lấy
+                        attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'], // lấy ra những column cần lấy
                         raw: true, // nó sẽ trả luôn luôn cho ta một Object
                     });
 
@@ -100,9 +100,10 @@ class USERServices {
                             firstName: data.firstName,
                             lastName: data.lastName,
                             address: data.address,
-                            gender: data.gender === '1' ? true : false,
+                            gender: data.gender,
                             roleId: data.roleId,
                             phonenumber: data.phonenumber,
+                            positionId: data.positionId || null,
                         });
 
                         // thoát ra khỏi promises
