@@ -1,6 +1,7 @@
 import express from 'express';
 import APIUserController from '../controller/APIUserController';
 import APIAllCodeController from '../controller/APIAllCodeController';
+import APIDoctorController from '../controller/APIDoctorController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
@@ -12,6 +13,10 @@ const initAPIRoute = (app) => {
 
     // all code
     router.get('/all/code', APIAllCodeController.getAllCode);
+
+    // home doctor
+
+    router.get('/top/doctor-home', APIDoctorController.getTopDoctorHome);
 
     return app.use('/api/v1', router);
 };

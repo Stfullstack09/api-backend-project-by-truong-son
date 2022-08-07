@@ -56,14 +56,14 @@ class USERServices {
                     if (id === 'All') {
                         user = await db.User.findAll({
                             attributes: {
-                                exclude: ['password', 'phonenumber'], // Không trả password ra
+                                exclude: ['password'], // Không trả password ra
                             },
                         });
                     } else {
                         user = await db.User.findOne({
                             where: { id: id },
                             attributes: {
-                                exclude: ['password', 'phonenumber'], // Không trả password ra
+                                exclude: ['password'], // Không trả password ra
                             },
                         });
                     }
@@ -90,6 +90,10 @@ class USERServices {
                 try {
                     // check email is exit
 
+                    // if(data.image && data.image.size > 1000000) {
+
+                    // }
+
                     const checkEmailExit = await this.handleCheckEmailUser(data.email);
 
                     if (!checkEmailExit) {
@@ -103,6 +107,7 @@ class USERServices {
                             gender: data.gender,
                             roleId: data.roleId,
                             phonenumber: data.phonenumber,
+                            image: data.image,
                             positionId: data.positionId || null,
                         });
 
@@ -134,13 +139,14 @@ class USERServices {
 
     async updateUserData(dataBody) {
         return new Promise(async (resolve, reject) => {
-            console.log(dataBody);
-
             if (
                 dataBody.id &&
                 dataBody.firstName &&
                 dataBody.lastName &&
                 dataBody.address &&
+                dataBody.positionId &&
+                dataBody.gender &&
+                dataBody.roleId &&
                 dataBody.firstName.length > 0 &&
                 dataBody.lastName.length > 0 &&
                 dataBody.address.length > 0
@@ -151,15 +157,37 @@ class USERServices {
                     if (user) {
                         if (dataBody.password && dataBody.password.length >= 8) {
                             const hasPassword = await this.hasUserPassword(dataBody.password);
-                            const data = await db.User.update(
-                                {
-                                    firstName: dataBody.firstName,
-                                    lastName: dataBody.lastName,
-                                    address: dataBody.address,
-                                    password: hasPassword,
-                                },
-                                { where: { id: dataBody.id } },
-                            );
+
+                            if (dataBody.image) {
+                                const data = await db.User.update(
+                                    {
+                                        phonenumber: dataBody.phonenumber,
+                                        positionId: dataBody.position || dataBody.positionId,
+                                        roleId: dataBody.roleId,
+                                        gender: dataBody.gender,
+                                        firstName: dataBody.firstName,
+                                        lastName: dataBody.lastName,
+                                        address: dataBody.address,
+                                        password: hasPassword,
+                                        image: dataBody.image,
+                                    },
+                                    { where: { id: dataBody.id } },
+                                );
+                            } else {
+                                const data = await db.User.update(
+                                    {
+                                        phonenumber: dataBody.phonenumber,
+                                        positionId: dataBody.position || dataBody.positionId,
+                                        roleId: dataBody.roleId,
+                                        gender: dataBody.gender,
+                                        firstName: dataBody.firstName,
+                                        lastName: dataBody.lastName,
+                                        address: dataBody.address,
+                                        password: hasPassword,
+                                    },
+                                    { where: { id: dataBody.id } },
+                                );
+                            }
 
                             return resolve({
                                 errCode: 0,
@@ -168,14 +196,34 @@ class USERServices {
                         }
 
                         if (!dataBody.password) {
-                            const data = await db.User.update(
-                                {
-                                    firstName: dataBody.firstName,
-                                    lastName: dataBody.lastName,
-                                    address: dataBody.address,
-                                },
-                                { where: { id: dataBody.id } },
-                            );
+                            if (dataBody.image) {
+                                const data = await db.User.update(
+                                    {
+                                        phonenumber: dataBody.phonenumber,
+                                        positionId: dataBody.position || dataBody.positionId,
+                                        roleId: dataBody.roleId,
+                                        gender: dataBody.gender,
+                                        firstName: dataBody.firstName,
+                                        lastName: dataBody.lastName,
+                                        address: dataBody.address,
+                                        image: dataBody.image,
+                                    },
+                                    { where: { id: dataBody.id } },
+                                );
+                            } else {
+                                const data = await db.User.update(
+                                    {
+                                        phonenumber: dataBody.phonenumber,
+                                        positionId: dataBody.position || dataBody.positionId,
+                                        roleId: dataBody.roleId,
+                                        gender: dataBody.gender,
+                                        firstName: dataBody.firstName,
+                                        lastName: dataBody.lastName,
+                                        address: dataBody.address,
+                                    },
+                                    { where: { id: dataBody.id } },
+                                );
+                            }
 
                             return resolve({
                                 errCode: 0,

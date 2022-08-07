@@ -24,8 +24,6 @@ class APIUserController {
     async handleGetAllUsers(req, res, next) {
         const id = req.query.id; // All || ID
 
-        console.log(id);
-
         if (!id) {
             return res.status(500).json({
                 errCode: 1,

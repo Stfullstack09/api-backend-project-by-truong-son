@@ -8,6 +8,8 @@ require('dotenv').config();
 const port = Number(process.env.PORT) || 8080;
 const app = express();
 
+const bodyParser = require('body-parser');
+
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', process.env.LOCAL_HOST);
@@ -27,8 +29,10 @@ app.use(function (req, res, next) {
 });
 
 //save body form data
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // config viewEngine
 configViewEngine(app);
