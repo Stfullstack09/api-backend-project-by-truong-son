@@ -144,9 +144,6 @@ class USERServices {
                 dataBody.firstName &&
                 dataBody.lastName &&
                 dataBody.address &&
-                dataBody.positionId &&
-                dataBody.gender &&
-                dataBody.roleId &&
                 dataBody.firstName.length > 0 &&
                 dataBody.lastName.length > 0 &&
                 dataBody.address.length > 0
