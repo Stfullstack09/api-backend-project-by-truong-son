@@ -1,3 +1,4 @@
+import { raw } from 'body-parser';
 import db from '../models';
 
 class doctorService {
@@ -48,27 +49,58 @@ class doctorService {
     }
 
     async saveInfoDoctor(info) {
+        console.log('check Info :', info);
+
         return new Promise(async (resolve, reject) => {
             try {
-                if (!info.doctorId || !info.contentHTML || !info.contentMarkdown) {
+                if (!info.doctorId || !info.contentHTML || !info.contentMarkdown || !info.action) {
                     return resolve({
                         errCode: 1,
                         errMessage: 'Missing required parameters',
                     });
                 } else {
-                    await db.Markdown.create({
-                        contentHTML: info.contentHTML,
-                        contentMarkdown: info.contentMarkdown,
-                        description: info.description,
-                        doctorId: info.doctorId,
-                        specialtyId: info.specialtyId,
-                        clinicId: info.clinicId,
-                    });
+                    if (info.action === 'CREATE') {
+                        await db.Markdown.create({
+                            contentHTML: info.contentHTML,
+                            contentMarkdown: info.contentMarkdown,
+                            description: info.description,
+                            doctorId: info.doctorId,
+                            specialtyId: info.specialtyId,
+                            clinicId: info.clinicId,
+                        });
 
-                    resolve({
-                        errCode: 0,
-                        errMessage: 'successfully saved information',
-                    });
+                        return resolve({
+                            errCode: 0,
+                            errMessage: 'successfully create information',
+                        });
+                    } else if (info.action === 'EDIT') {
+                        const dataMarkDown = await db.Markdown.findOne({
+                            where: { doctorId: info.doctorId },
+                        });
+
+                        if (dataMarkDown) {
+                            await db.Markdown.update(
+                                {
+                                    contentHTML: info.contentHTML,
+                                    contentMarkdown: info.contentMarkdown,
+                                    description: info.description,
+                                    specialtyId: info.specialtyId,
+                                    clinicId: info.clinicId,
+                                },
+                                { where: { doctorId: info.doctorId } },
+                            );
+
+                            return resolve({
+                                errCode: 0,
+                                errMessage: 'successfully saved information',
+                            });
+                        } else {
+                            return resolve({
+                                errCode: 1,
+                                errMessage: 'cound not found saved information',
+                            });
+                        }
+                    }
                 }
             } catch (error) {
                 reject(error);
@@ -77,6 +109,8 @@ class doctorService {
     }
 
     async getInfoDoctorByID(id) {
+        console.log('check ID :', id);
+
         return new Promise(async (resolve, reject) => {
             try {
                 if (!id) {
@@ -91,7 +125,7 @@ class doctorService {
                         const data = await db.User.findOne({
                             where: { id },
                             attributes: {
-                                exclude: ['password', 'image'],
+                                exclude: ['password'],
                             },
                             include: [
                                 { model: db.Markdown, attributes: ['description', 'contentMarkdown', 'contentHTML'] },
@@ -100,6 +134,10 @@ class doctorService {
                             raw: true, // Không có lỗi ( requiered)
                             nest: true, // Không có lỗi ( requiered)
                         });
+
+                        if (data && data.image) {
+                            data.image = Buffer(data.image, 'base64').toString('binary');
+                        }
 
                         return resolve({
                             errCode: 0,
@@ -113,6 +151,47 @@ class doctorService {
                             data: [],
                         });
                     }
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getInfoDoctorMarkDownByID(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (id) {
+                    const data = await db.User.findOne({
+                        where: { id }, // ES6
+
+                        attributes: ['email'],
+
+                        include: [
+                            { model: db.Markdown, attributes: ['description', 'contentMarkdown', 'contentHTML'] },
+                        ],
+                        raw: true, // Không có lỗi ( requiered)
+                        nest: true,
+                    });
+
+                    if (data) {
+                        return resolve({
+                            errCode: 0,
+                            errMessage: 'successfully',
+                            data,
+                        });
+                    } else {
+                        return resolve({
+                            errCode: 0,
+                            errMessage: `Coundn't`,
+                            data: {},
+                        });
+                    }
+                } else {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameter',
+                    });
                 }
             } catch (error) {
                 reject(error);

@@ -20,6 +20,7 @@ const initAPIRoute = (app) => {
     router.get('/get-all-doctor', APIDoctorController.getAllDoctor);
     router.post('/save-info-doctor', APIDoctorController.postInfoDoctor);
     router.get('/get-info-doctor', APIDoctorController.getInfoDoctorByID);
+    router.get('/get-info-doctor-markdowns', APIDoctorController.getInfoDoctorMarkDownByID);
 
     return app.use('/api/v1', router);
 };
