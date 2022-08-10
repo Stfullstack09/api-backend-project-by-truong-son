@@ -222,14 +222,6 @@ class doctorService {
                         raw: true,
                     });
 
-                    if (exiting && exiting.length > 0) {
-                        exiting = exiting.map((item) => {
-                            item.date = new Date(item.date).getTime();
-
-                            return item;
-                        });
-                    }
-
                     const Result = Schedule.filter(
                         (item) => !exiting.find((data) => data.timeType === item.timeType && data.date === item.date),
                     );
@@ -273,7 +265,9 @@ class doctorService {
                             doctorId: doctorId,
                             date: date,
                         },
-                        raw: false,
+                        include: [{ model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN', 'valueVI'] }],
+                        raw: true, // Không có lỗi ( requiered)
+                        nest: true, // Không có lỗi ( requiered)
                     });
 
                     if (!data) {
