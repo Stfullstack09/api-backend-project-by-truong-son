@@ -1,5 +1,9 @@
 import { raw } from 'body-parser';
 import db from '../models';
+require('dotenv').config();
+import _ from 'lodash';
+
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 class doctorService {
     getTopDoctorHome(limit) {
@@ -49,8 +53,6 @@ class doctorService {
     }
 
     async saveInfoDoctor(info) {
-        console.log('check Info :', info);
-
         return new Promise(async (resolve, reject) => {
             try {
                 if (!info.doctorId || !info.contentHTML || !info.contentMarkdown || !info.action) {
@@ -109,8 +111,6 @@ class doctorService {
     }
 
     async getInfoDoctorByID(id) {
-        console.log('check ID :', id);
-
         return new Promise(async (resolve, reject) => {
             try {
                 if (!id) {
@@ -128,7 +128,10 @@ class doctorService {
                                 exclude: ['password'],
                             },
                             include: [
-                                { model: db.Markdown, attributes: ['description', 'contentMarkdown', 'contentHTML'] },
+                                {
+                                    model: db.Markdown,
+                                    attributes: ['description', 'contentMarkdown', 'contentHTML', 'updatedAt'],
+                                },
                                 { model: db.Allcode, as: 'positionData', attributes: ['valueEN', 'valueVI'] },
                             ],
                             raw: true, // Không có lỗi ( requiered)
@@ -136,7 +139,7 @@ class doctorService {
                         });
 
                         if (data && data.image) {
-                            data.image = Buffer(data.image, 'base64').toString('binary');
+                            data.image = Buffer.from(data.image, 'base64').toString('binary');
                         }
 
                         return resolve({
@@ -191,6 +194,95 @@ class doctorService {
                     return resolve({
                         errCode: 1,
                         errMessage: 'Missing required parameter',
+                    });
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async bunkCreateSchedule(data) {
+        return new Promise(async function (resolve, reject) {
+            try {
+                if (data && data.length > 0) {
+                    let Schedule = [];
+
+                    Schedule = data.map((data) => {
+                        data.maxNumber = MAX_NUMBER_SCHEDULE;
+                        return data;
+                    });
+
+                    let exiting = await db.schedule.findAll({
+                        where: {
+                            doctorId: Schedule[0].doctorId,
+                            date: Schedule[0].date,
+                        },
+                        attributes: ['date', 'timeType', 'doctorId', 'maxNumber'],
+                        raw: true,
+                    });
+
+                    if (exiting && exiting.length > 0) {
+                        exiting = exiting.map((item) => {
+                            item.date = new Date(item.date).getTime();
+
+                            return item;
+                        });
+                    }
+
+                    const Result = Schedule.filter(
+                        (item) => !exiting.find((data) => data.timeType === item.timeType && data.date === item.date),
+                    );
+
+                    if (Result && Result.length > 0) {
+                        await db.schedule.bulkCreate(Result);
+                        return resolve({
+                            errCode: 0,
+                            errMessage: 'Successfully',
+                        });
+                    } else {
+                        return resolve({
+                            errCode: 1,
+                            errMessage: 'The calendar is full',
+                        });
+                    }
+                } else {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameters',
+                        data: [],
+                    });
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getScheduleDoctorByDate(doctorId, date) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!doctorId || !date) {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameters',
+                    });
+                } else {
+                    const data = await db.schedule.findAll({
+                        where: {
+                            doctorId: doctorId,
+                            date: date,
+                        },
+                        raw: false,
+                    });
+
+                    if (!data) {
+                        data = [];
+                    }
+
+                    return resolve({
+                        errCode: 0,
+                        data,
                     });
                 }
             } catch (error) {

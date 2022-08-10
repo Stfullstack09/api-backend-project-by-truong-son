@@ -21,6 +21,8 @@ const initAPIRoute = (app) => {
     router.post('/save-info-doctor', APIDoctorController.postInfoDoctor);
     router.get('/get-info-doctor', APIDoctorController.getInfoDoctorByID);
     router.get('/get-info-doctor-markdowns', APIDoctorController.getInfoDoctorMarkDownByID);
+    router.post('/bulk-create-schedule', APIDoctorController.bulkCreateSchedule);
+    router.get('/get-schedule-doctor-by-date', APIDoctorController.getScheduleDoctorByDate);
 
     return app.use('/api/v1', router);
 };
