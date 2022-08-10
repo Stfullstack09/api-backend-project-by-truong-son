@@ -55,12 +55,25 @@ class doctorService {
     async saveInfoDoctor(info) {
         return new Promise(async (resolve, reject) => {
             try {
-                if (!info.doctorId || !info.contentHTML || !info.contentMarkdown || !info.action) {
-                    return resolve({
+                if (
+                    !info.doctorId ||
+                    !info.contentHTML ||
+                    !info.contentMarkdown ||
+                    !info.action ||
+                    !info.selectedPrice ||
+                    !info.selectedPayment ||
+                    !info.selectedPrince ||
+                    !info.nameClinic ||
+                    !info.addRessClinic ||
+                    !info.note
+                ) {
+                    resolve({
                         errCode: 1,
                         errMessage: 'Missing required parameters',
                     });
                 } else {
+                    // update , insert data (upsert)
+
                     if (info.action === 'CREATE') {
                         await db.Markdown.create({
                             contentHTML: info.contentHTML,
@@ -71,7 +84,7 @@ class doctorService {
                             clinicId: info.clinicId,
                         });
 
-                        return resolve({
+                        resolve({
                             errCode: 0,
                             errMessage: 'successfully create information',
                         });
@@ -92,16 +105,56 @@ class doctorService {
                                 { where: { doctorId: info.doctorId } },
                             );
 
-                            return resolve({
+                            resolve({
                                 errCode: 0,
                                 errMessage: 'successfully saved information',
                             });
                         } else {
-                            return resolve({
+                            resolve({
                                 errCode: 1,
                                 errMessage: 'cound not found saved information',
                             });
                         }
+                    }
+
+                    // up date and inser doctor_info
+
+                    let doctorInfo = await db.Doctor_Infor.findOne({
+                        where: {
+                            doctorId: info.doctorId,
+                        },
+                    });
+
+                    if (doctorInfo) {
+                        // update
+                        await db.Doctor_Infor.update(
+                            {
+                                priceId: info.selectedPrice,
+                                provinceId: info.selectedPayment,
+                                paymentId: info.selectedPrince,
+                                addressClinic: info.addRessClinic,
+                                nameClinic: info.nameClinic,
+                                note: info.note,
+                                doctorId: info.doctorId,
+                            },
+                            {
+                                where: {
+                                    doctorId: info.doctorId,
+                                },
+                            },
+                        );
+                    } else {
+                        // create
+
+                        await db.Doctor_Infor.create({
+                            priceId: info.selectedPrice,
+                            provinceId: info.selectedPayment,
+                            paymentId: info.selectedPrince,
+                            addressClinic: info.addRessClinic,
+                            nameClinic: info.nameClinic,
+                            note: info.note,
+                            doctorId: info.doctorId,
+                        });
                     }
                 }
             } catch (error) {
