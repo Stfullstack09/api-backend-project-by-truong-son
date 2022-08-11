@@ -62,7 +62,7 @@ class doctorService {
                     !info.action ||
                     !info.selectedPrice ||
                     !info.selectedPayment ||
-                    !info.selectedPrince ||
+                    !info.selectedProvince ||
                     !info.nameClinic ||
                     !info.addRessClinic ||
                     !info.note
@@ -130,8 +130,8 @@ class doctorService {
                         await db.Doctor_Infor.update(
                             {
                                 priceId: info.selectedPrice,
-                                provinceId: info.selectedPayment,
-                                paymentId: info.selectedPrince,
+                                paymentId: info.selectedPayment,
+                                provinceId: info.selectedProvince,
                                 addressClinic: info.addRessClinic,
                                 nameClinic: info.nameClinic,
                                 note: info.note,
@@ -148,8 +148,8 @@ class doctorService {
 
                         await db.Doctor_Infor.create({
                             priceId: info.selectedPrice,
-                            provinceId: info.selectedPayment,
-                            paymentId: info.selectedPrince,
+                            paymentId: info.selectedPayment,
+                            provinceId: info.selectedProvince,
                             addressClinic: info.addRessClinic,
                             nameClinic: info.nameClinic,
                             note: info.note,
@@ -225,6 +225,30 @@ class doctorService {
 
                         include: [
                             { model: db.Markdown, attributes: ['description', 'contentMarkdown', 'contentHTML'] },
+                            {
+                                model: db.Doctor_Infor,
+                                attributes: {
+                                    exclude: ['id', 'doctorId', 'createdAt', 'updatedAt'],
+                                },
+
+                                include: [
+                                    {
+                                        model: db.Allcode,
+                                        as: 'priceTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'payMentTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'provinceTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                ],
+                            },
                         ],
                         raw: true, // Không có lỗi ( requiered)
                         nest: true,
@@ -331,6 +355,135 @@ class doctorService {
                         errCode: 0,
                         data,
                     });
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getExtraDoctorInfoByID(doctorId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!doctorId) {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameters',
+                        data: {},
+                    });
+                } else {
+                    let data = await db.Doctor_Infor.findOne({
+                        where: {
+                            doctorId: doctorId,
+                        },
+
+                        attributes: {
+                            exclude: ['id', 'doctorId', 'createdAt', 'updatedAt'],
+                        },
+
+                        include: [
+                            {
+                                model: db.Allcode,
+                                as: 'priceTypeData',
+                                attributes: ['valueVI', 'valueEN'],
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'payMentTypeData',
+                                attributes: ['valueVI', 'valueEN'],
+                            },
+                            {
+                                model: db.Allcode,
+                                as: 'provinceTypeData',
+                                attributes: ['valueVI', 'valueEN'],
+                            },
+                        ],
+
+                        raw: false,
+                        nest: true,
+                    });
+
+                    if (!data) {
+                        data = {};
+                    }
+
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Successfully',
+                        data: data,
+                    });
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getProfileDoctorByID(doctorId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!doctorId) {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameter',
+                        data: {},
+                    });
+                } else {
+                    const data = await db.User.findOne({
+                        where: { id: doctorId }, // ES6
+
+                        attributes: {
+                            exclude: ['password'],
+                        },
+
+                        include: [
+                            { model: db.Markdown, attributes: ['description'] },
+                            {
+                                model: db.Doctor_Infor,
+                                attributes: {
+                                    exclude: ['id', 'doctorId', 'createdAt', 'updatedAt'],
+                                },
+
+                                include: [
+                                    {
+                                        model: db.Allcode,
+                                        as: 'priceTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'payMentTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                    {
+                                        model: db.Allcode,
+                                        as: 'provinceTypeData',
+                                        attributes: ['valueVI', 'valueEN'],
+                                    },
+                                ],
+                            },
+                        ],
+                        raw: true, // Không có lỗi ( requiered)
+                        nest: true,
+                    });
+
+                    if (data && data.image) {
+                        data.image = Buffer.from(data.image, 'base64').toString('binary');
+                    }
+
+                    if (data) {
+                        return resolve({
+                            errCode: 0,
+                            errMessage: 'successfully',
+                            data,
+                        });
+                    } else {
+                        return resolve({
+                            errCode: 0,
+                            errMessage: `Coundn't`,
+                            data: {},
+                        });
+                    }
                 }
             } catch (error) {
                 reject(error);

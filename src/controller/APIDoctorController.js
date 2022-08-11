@@ -103,6 +103,34 @@ class APIDoctorController {
             });
         }
     }
+
+    async getExtraDoctorInfoByID(req, res) {
+        try {
+            const data = await doctorService.getExtraDoctorInfoByID(req.query.doctorId);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error From server',
+            });
+        }
+    }
+
+    async getProfileDoctorByID(req, res) {
+        try {
+            const data = await doctorService.getProfileDoctorByID(req.query.doctorId);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error From server',
+            });
+        }
+    }
 }
 
 export default new APIDoctorController();
