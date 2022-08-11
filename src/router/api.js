@@ -2,6 +2,7 @@ import express from 'express';
 import APIUserController from '../controller/APIUserController';
 import APIAllCodeController from '../controller/APIAllCodeController';
 import APIDoctorController from '../controller/APIDoctorController';
+import APIPatientController from '../controller/APIPatientController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
@@ -25,6 +26,10 @@ const initAPIRoute = (app) => {
     router.get('/get-schedule-doctor-by-date', APIDoctorController.getScheduleDoctorByDate);
     router.get('/get-extra-doctor-info-by-id', APIDoctorController.getExtraDoctorInfoByID);
     router.get('/get-profile-doctor-by-id', APIDoctorController.getProfileDoctorByID);
+
+    // patient booking
+
+    router.post('/patient-booking-appointment', APIPatientController.postBookAppointment);
 
     return app.use('/api/v1', router);
 };
