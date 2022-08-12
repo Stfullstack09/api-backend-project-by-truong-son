@@ -33,6 +33,10 @@ const initAPIRoute = (app) => {
 
     // send email
 
+    // verify email
+
+    router.post('/verify-booking', APIPatientController.VerifyBookAppointment);
+
     return app.use('/api/v1', router);
 };
 

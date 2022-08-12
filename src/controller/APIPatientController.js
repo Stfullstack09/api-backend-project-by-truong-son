@@ -14,6 +14,20 @@ class APIPatientController {
             });
         }
     }
+
+    async VerifyBookAppointment(req, res, next) {
+        try {
+            const data = await PatientServices.VerifyBookAppointment(req.body);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({
+                errCode: 1,
+                errMessage: 'Error from server',
+            });
+        }
+    }
 }
 
 export default new APIPatientController();
