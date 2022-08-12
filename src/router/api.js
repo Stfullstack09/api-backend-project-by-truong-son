@@ -3,6 +3,7 @@ import APIUserController from '../controller/APIUserController';
 import APIAllCodeController from '../controller/APIAllCodeController';
 import APIDoctorController from '../controller/APIDoctorController';
 import APIPatientController from '../controller/APIPatientController';
+import APISpeciatlyController from '../controller/APISpeciatlyController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
@@ -36,6 +37,10 @@ const initAPIRoute = (app) => {
     // verify email
 
     router.post('/verify-booking', APIPatientController.VerifyBookAppointment);
+
+    //specialty booking
+
+    router.post('/create-specialty-booking', APISpeciatlyController.CreateSpeciatlyBooking);
 
     return app.use('/api/v1', router);
 };
