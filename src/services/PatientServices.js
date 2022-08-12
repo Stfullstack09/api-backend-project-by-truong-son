@@ -5,7 +5,7 @@ import EmailService from './EmailService';
 import { v4 as uuidv4 } from 'uuid';
 
 let letBuildUrlEmail = (doctorId, token) => {
-    let result = `${process.env.LOCAL_HOST}/verify-booking/?token=${token}&doctorId=${doctorId}`;
+    let result = `${process.env.LOCAL_HOST}/verify-booking?token=${token}&doctorId=${doctorId}`;
     return result;
 };
 class PatientServices {
