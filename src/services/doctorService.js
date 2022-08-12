@@ -342,7 +342,10 @@ class doctorService {
                             doctorId: doctorId,
                             date: date,
                         },
-                        include: [{ model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN', 'valueVI'] }],
+                        include: [
+                            { model: db.Allcode, as: 'timeTypeData', attributes: ['valueEN', 'valueVI'] },
+                            { model: db.User, as: 'doctorData', attributes: ['firstName', 'lastName'] },
+                        ],
                         raw: true, // Không có lỗi ( requiered)
                         nest: true, // Không có lỗi ( requiered)
                     });

@@ -1,17 +1,27 @@
 import db from '../models';
 require('dotenv').config();
 import _ from 'lodash';
+import EmailService from './EmailService';
 
 class PatientServices {
     postBookAppointment(data) {
         return new Promise(async function (resolve, reject) {
             try {
-                if (!data.email || !data.timeType || !data.date || !data.doctorId) {
+                if (!data.email || !data.timeType || !data.date || !data.doctorId || !data.fullName) {
                     return resolve({
                         errCode: 1,
                         errMessage: 'Missing required parameters',
                     });
                 } else {
+                    await EmailService.sendSimpleEmail({
+                        email: data.email,
+                        patientName: data.fullName,
+                        time: data.TimeString,
+                        doctorName: data.doctorName,
+                        language: data.language,
+                        redirectLink: 'https://www.youtube.com/',
+                    });
+
                     // upsert
 
                     const [user, boolean] = await db.User.findOrCreate({

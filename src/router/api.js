@@ -31,6 +31,8 @@ const initAPIRoute = (app) => {
 
     router.post('/patient-booking-appointment', APIPatientController.postBookAppointment);
 
+    // send email
+
     return app.use('/api/v1', router);
 };
 
