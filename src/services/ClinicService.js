@@ -40,7 +40,6 @@ class ClinicService {
             try {
                 if (
                     !data.id ||
-                    !data.name ||
                     !data.imageBase64 ||
                     !data.descriptionHTML ||
                     !data.descriptionMarkDown ||
@@ -84,6 +83,93 @@ class ClinicService {
                             errMessage: ' Cound Update Successfully',
                         });
                     }
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getLimitAllClinic(limit) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!limit) {
+                    limit = 20;
+                }
+
+                let Limit = Number(limit);
+
+                let data = await db.clinnic.findAll({
+                    limit: Limit,
+
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt'],
+                    },
+                });
+
+                let Result;
+
+                if (data && data.length > 0) {
+                    Result = data.map((item) => {
+                        item.image = Buffer.from(item.image, 'base64').toString('binary');
+                        return item;
+                    });
+                }
+
+                return resolve({
+                    errCode: 0,
+                    errMessage: 'Successfully',
+                    data: Result,
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async getDetailClinicById(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!id) {
+                    return resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameter',
+                    });
+                } else {
+                    let data = await db.clinnic.findOne({
+                        where: {
+                            id,
+                        },
+
+                        attributes: ['image', 'name', 'address', 'descriptionHTML', 'descriptionMarkDown'],
+                    });
+
+                    if (!data) {
+                        data = {};
+                    }
+
+                    if (data) {
+                        let DoctorSpecialty = [];
+
+                        DoctorSpecialty = await db.Doctor_Infor.findAll({
+                            where: {
+                                clinicId: id,
+                            },
+                            attributes: ['doctorId', 'provinceId'],
+                        });
+
+                        if (DoctorSpecialty) {
+                            data.doctorSpecialty = DoctorSpecialty;
+                        } else {
+                            data.doctorSpecialty = {};
+                        }
+                    }
+
+                    return resolve({
+                        errCode: 0,
+                        errMessage: ' Successfully',
+                        data,
+                    });
                 }
             } catch (error) {
                 reject(error);

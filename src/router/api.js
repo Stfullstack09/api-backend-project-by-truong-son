@@ -5,6 +5,7 @@ import APIDoctorController from '../controller/APIDoctorController';
 import APIPatientController from '../controller/APIPatientController';
 import APISpeciatlyController from '../controller/APISpeciatlyController';
 import APIClinicController from '../controller/APIClinicController';
+import APISiteController from '../controller/APISiteController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
@@ -49,8 +50,13 @@ const initAPIRoute = (app) => {
 
     router.post('/create-new-clinic', APIClinicController.CreateNewClinic);
     router.post('/save-clinic-edit', APIClinicController.saveClinicEdit);
-    // router.get('/get-limit-all-speciatly', APISpeciatlyController.getLimitAllSpeciatly);
-    // router.get('/get-details-speciatly-by-id', APISpeciatlyController.getDetailSpeciatlyById);
+    router.get('/get-limit-all-clinic', APIClinicController.getLimitAllClinic);
+    router.get('/get-details-clinic-by-id', APIClinicController.getDetailClinicById);
+
+    // sites
+    router.post('/create-site', APISiteController.CreateNewSite);
+    router.get('/get-all-site', APISiteController.getAllSite);
+    router.get('/get-details-site-by-id', APISiteController.getDetailSiteById);
 
     return app.use('/api/v1', router);
 };

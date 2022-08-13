@@ -28,6 +28,34 @@ class APIClinicController {
             });
         }
     }
+
+    async getLimitAllClinic(req, res, next) {
+        try {
+            const data = await ClinicService.getLimitAllClinic(req.query.limit);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error from server',
+            });
+        }
+    }
+
+    async getDetailClinicById(req, res, next) {
+        try {
+            const data = await ClinicService.getDetailClinicById(req.query.id);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            return res.status(200).json({
+                errCode: 0,
+                errMessage: 'Error from server',
+            });
+        }
+    }
 }
 
 export default new APIClinicController();

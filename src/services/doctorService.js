@@ -272,6 +272,7 @@ class doctorService {
                                         attributes: ['valueVI', 'valueEN'],
                                     },
                                     { model: db.specialty, as: 'specialtyData', attributes: ['name'] },
+                                    { model: db.clinnic, as: 'clinicData', attributes: ['name', 'id'] },
                                 ],
                             },
                         ],

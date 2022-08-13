@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+
+            clinnic.hasMany(models.Doctor_Infor, {
+                foreignKey: 'id',
+                targetKey: 'keyMap',
+                as: 'clinicData',
+            });
         }
     }
     clinnic.init(
@@ -16,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             address: DataTypes.STRING,
             descriptionMarkDown: DataTypes.TEXT,
             descriptionHTML: DataTypes.TEXT,
-            image: DataTypes.BLOB,
+            image: DataTypes.BLOB('long'),
             name: DataTypes.STRING,
         },
         {
