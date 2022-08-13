@@ -52,24 +52,44 @@ class doctorService {
         });
     }
 
+    checkRequiredFields(data) {
+        let idValid = true;
+        let element;
+
+        let arr = [
+            'doctorId',
+            'contentHTML',
+            'contentMarkdown',
+            'action',
+            'selectedPrice',
+            'selectedPayment',
+            'selectedProvince',
+            'nameClinic',
+            'addRessClinic',
+            'note',
+            'specialtyId',
+        ];
+
+        for (let i = 0; i < arr.length; i++) {
+            if (!data[arr[i]]) {
+                idValid = false;
+                element = arr[i];
+                break;
+            }
+        }
+
+        return { idValid, element };
+    }
+
     async saveInfoDoctor(info) {
         return new Promise(async (resolve, reject) => {
             try {
-                if (
-                    !info.doctorId ||
-                    !info.contentHTML ||
-                    !info.contentMarkdown ||
-                    !info.action ||
-                    !info.selectedPrice ||
-                    !info.selectedPayment ||
-                    !info.selectedProvince ||
-                    !info.nameClinic ||
-                    !info.addRessClinic ||
-                    !info.note
-                ) {
+                const check = this.checkRequiredFields(info);
+
+                if (!check.idValid) {
                     resolve({
                         errCode: 1,
-                        errMessage: 'Missing required parameters',
+                        errMessage: `Missing required parameters ${check.element}`,
                     });
                 } else {
                     // update , insert data (upsert)
@@ -126,6 +146,8 @@ class doctorService {
                     });
 
                     if (doctorInfo) {
+                        console.log('check ID :', info.specialtyId);
+
                         // update
                         await db.Doctor_Infor.update(
                             {
@@ -136,6 +158,8 @@ class doctorService {
                                 nameClinic: info.nameClinic,
                                 note: info.note,
                                 doctorId: info.doctorId,
+                                specialtyId: info.specialtyId,
+                                clinicId: info.clinicId,
                             },
                             {
                                 where: {
@@ -154,6 +178,8 @@ class doctorService {
                             nameClinic: info.nameClinic,
                             note: info.note,
                             doctorId: info.doctorId,
+                            specialtyId: info.specialtyId,
+                            clinicId: info.clinicId,
                         });
                     }
                 }
@@ -247,6 +273,7 @@ class doctorService {
                                         as: 'provinceTypeData',
                                         attributes: ['valueVI', 'valueEN'],
                                     },
+                                    { model: db.specialty, as: 'specialtyData', attributes: ['name'] },
                                 ],
                             },
                         ],

@@ -41,6 +41,8 @@ const initAPIRoute = (app) => {
     //specialty booking
 
     router.post('/create-specialty-booking', APISpeciatlyController.CreateSpeciatlyBooking);
+    router.get('/get-limit-all-speciatly', APISpeciatlyController.getLimitAllSpeciatly);
+    router.get('/get-details-speciatly-by-id', APISpeciatlyController.getDetailSpeciatlyById);
 
     return app.use('/api/v1', router);
 };
