@@ -146,8 +146,6 @@ class doctorService {
                     });
 
                     if (doctorInfo) {
-                        console.log('check ID :', info.specialtyId);
-
                         // update
                         await db.Doctor_Infor.update(
                             {

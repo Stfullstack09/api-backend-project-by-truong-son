@@ -20,8 +20,6 @@ class PatientServices {
                 } else {
                     let Token = uuidv4();
 
-                    console.log('Token :', Token);
-
                     await EmailService.sendSimpleEmail({
                         email: data.email,
                         patientName: data.fullName,

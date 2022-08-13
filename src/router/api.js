@@ -4,6 +4,7 @@ import APIAllCodeController from '../controller/APIAllCodeController';
 import APIDoctorController from '../controller/APIDoctorController';
 import APIPatientController from '../controller/APIPatientController';
 import APISpeciatlyController from '../controller/APISpeciatlyController';
+import APIClinicController from '../controller/APIClinicController';
 const router = express.Router();
 
 const initAPIRoute = (app) => {
@@ -43,6 +44,13 @@ const initAPIRoute = (app) => {
     router.post('/create-specialty-booking', APISpeciatlyController.CreateSpeciatlyBooking);
     router.get('/get-limit-all-speciatly', APISpeciatlyController.getLimitAllSpeciatly);
     router.get('/get-details-speciatly-by-id', APISpeciatlyController.getDetailSpeciatlyById);
+
+    // clinic
+
+    router.post('/create-new-clinic', APIClinicController.CreateNewClinic);
+    router.post('/save-clinic-edit', APIClinicController.saveClinicEdit);
+    // router.get('/get-limit-all-speciatly', APISpeciatlyController.getLimitAllSpeciatly);
+    // router.get('/get-details-speciatly-by-id', APISpeciatlyController.getDetailSpeciatlyById);
 
     return app.use('/api/v1', router);
 };
