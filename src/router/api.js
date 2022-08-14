@@ -29,6 +29,7 @@ const initAPIRoute = (app) => {
     router.get('/get-schedule-doctor-by-date', APIDoctorController.getScheduleDoctorByDate);
     router.get('/get-extra-doctor-info-by-id', APIDoctorController.getExtraDoctorInfoByID);
     router.get('/get-profile-doctor-by-id', APIDoctorController.getProfileDoctorByID);
+    router.post('/api-send-remedy', APIDoctorController.SenRemedy);
 
     // manage - patient
     router.get('/get-list-patient-for-doctor', APIDoctorController.getListPatientForDoctor);

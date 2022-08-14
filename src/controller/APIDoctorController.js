@@ -145,6 +145,20 @@ class APIDoctorController {
             });
         }
     }
+
+    async SenRemedy(req, res, next) {
+        try {
+            const data = await doctorService.SenRemedy(req.body);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error From server',
+            });
+        }
+    }
 }
 
 export default new APIDoctorController();
