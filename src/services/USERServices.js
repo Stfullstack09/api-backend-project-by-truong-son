@@ -15,7 +15,7 @@ class USERServices {
                 if (isExist) {
                     const user = await db.User.findOne({
                         where: { email: email },
-                        attributes: ['email', 'roleId', 'password', 'firstName', 'lastName'], // lấy ra những column cần lấy
+                        attributes: ['email', 'roleId', 'password', 'firstName', 'lastName', 'id'], // lấy ra những column cần lấy
                         raw: true, // nó sẽ trả luôn luôn cho ta một Object
                     });
 

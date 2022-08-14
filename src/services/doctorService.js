@@ -538,6 +538,7 @@ class doctorService {
                         },
 
                         include: [
+                            { model: db.Allcode, as: 'timeData', attributes: ['valueEN', 'valueVI'] },
                             {
                                 model: db.User,
                                 as: 'patientData',
