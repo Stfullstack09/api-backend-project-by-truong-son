@@ -12,7 +12,15 @@ class PatientServices {
     postBookAppointment(data) {
         return new Promise(async function (resolve, reject) {
             try {
-                if (!data.email || !data.timeType || !data.date || !data.doctorId || !data.fullName) {
+                if (
+                    !data.email ||
+                    !data.timeType ||
+                    !data.date ||
+                    !data.doctorId ||
+                    !data.fullName ||
+                    !data.address ||
+                    !data.selectedGender
+                ) {
                     return resolve({
                         errCode: 1,
                         errMessage: 'Missing required parameters',
@@ -36,7 +44,9 @@ class PatientServices {
                         defaults: {
                             email: data.email,
                             roleId: 'R3',
-                            token: Token,
+                            gender: data.selectedGender,
+                            address: data.address,
+                            firstName: data.fullName,
                         },
                         raw: false,
                     });

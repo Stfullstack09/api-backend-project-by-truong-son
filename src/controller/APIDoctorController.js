@@ -131,6 +131,20 @@ class APIDoctorController {
             });
         }
     }
+
+    async getListPatientForDoctor(req, res, next) {
+        try {
+            const data = await doctorService.getListPatientForDoctor(req.query.doctorId, req.query.date);
+
+            res.status(200).json(data);
+        } catch (error) {
+            console.log(error);
+            res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error From server',
+            });
+        }
+    }
 }
 
 export default new APIDoctorController();

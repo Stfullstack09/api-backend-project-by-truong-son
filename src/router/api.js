@@ -30,6 +30,9 @@ const initAPIRoute = (app) => {
     router.get('/get-extra-doctor-info-by-id', APIDoctorController.getExtraDoctorInfoByID);
     router.get('/get-profile-doctor-by-id', APIDoctorController.getProfileDoctorByID);
 
+    // manage - patient
+    router.get('/get-list-patient-for-doctor', APIDoctorController.getListPatientForDoctor);
+
     // patient booking
 
     router.post('/patient-booking-appointment', APIPatientController.postBookAppointment);
